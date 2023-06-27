@@ -1,11 +1,17 @@
 package br.ebr.dynamicmapping.domain;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Employee {
@@ -20,6 +26,11 @@ public class Employee {
 
     @Formula("GROSS_INCOME * TAX_IN_PERCENTS / 100")
     private long tax;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    @Where(clause = "deleted = false")
+    private Set<Phone> phones = new HashSet<>(0);
 
     public Employee() {
     }
@@ -54,6 +65,14 @@ public class Employee {
 
     public void setTax(long tax) {
         this.tax = tax;
+    }
+
+    public Set<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(Set<Phone> phones) {
+        this.phones = phones;
     }
 
 }
